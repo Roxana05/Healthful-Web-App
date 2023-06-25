@@ -1,0 +1,17 @@
+.recipe-tile {
+    display: inline-block;
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+}
+
+    .recipe-tile img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .recipe-tile h {
+        margin-top: 5px;
+    }

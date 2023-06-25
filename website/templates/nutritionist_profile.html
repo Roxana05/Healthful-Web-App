@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %} Nutritionist Profile {% endblock %}
+
+{% block content %}
+
+<div class="profile-info">
+  <h3>My Information</h3>
+
+  <!-- Display the client's profile picture -->
+  <img src="{{ profile_picture }}" class="img-fluid" alt="Profile Picture">
+  <br><br>
+  <button id="edit_profile_btn" class="btn btn-primary">Change Profile Picture</button>
+    <!-- Form to update profile picture-->
+  <form method="POST" enctype="multipart/form-data" style="display: none;" id="pfp">
+    <!-- Profile picture -->
+    <div class="form-group">
+      <label for="profile_picture">Profile Picture:</label>
+      <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
+      <button type="submit" class="btn btn-success mt-3">Save</button>
+    </div>
+  </form>
+
+  <br><br>
+
+  <!-- Display the client's first name, last name, and email -->
+  <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+
+  <!-- Display the client's stats -->
+  <p><strong>Age:</strong> {{ user.age }} </p>
+  
+  <!-- Add recipes option -->
+  <button class="btn btn-primary" id="add-recipe-btn" onclick="toggleRecipeForm()">Add Recipe</button>
+
+  <div id="recipe-form" style="display: none;">
+  <form method="POST" action="{{ url_for('views.nutritionist_profile') }}">
+
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" 
+            class="form-control" 
+            id="title" 
+            name="title" 
+            placeholder="Enter the title"
+        />
+    </div>
+
+    <div class="form-group">
+        <select class="form-control" name="recipe_type" required>
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+       <label for="ingredients">Ingredients</label>
+       <div id="ingredient-fields">
+           <div class="form-row">
+               <div class="col">
+                    <input type="text" 
+                        class="form-control" 
+                        id="ingredient-1" 
+                        name="ingredient-1" 
+                        placeholder="Ingredient"
+                        required
+                    />
+                </div>
+                <div class="col">
+                    <input type="text" 
+                        class="form-control" 
+                        id="amount-1" 
+                        name="amount-1" 
+                        placeholder="Enter amount"
+                        required
+                    />
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-secondary mt-2 btn-sm" id="add-ingredient">Add Ingredient</button>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Recipe Description:</label>
+        <textarea class="form-control" id="description" name="description" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-outline-primary btn-sm">Add Recipe</button>
+  </form>
+  
+</div>
+
+
+</div>
+<br><br>
+
+
+
+
+
+<!-- Notification Modal -->
+        <div id="notification_modal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Client Request</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Client: {{ client_name }}</p>
+                        <p>Email: {{ client_email }}</p>
+                        <p>Do you want to accept the request?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="acceptButton">Accept</button>
+                        <button type="button" class="btn btn-danger" id="declineButton">Decline</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
