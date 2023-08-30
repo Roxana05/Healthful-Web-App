@@ -2,37 +2,262 @@
 {% block title %} My Plan {% endblock %}
 
 {% block content %}
-<h1 align="center">My Plan</h1>
+<div class="container p-5">
 
-<div>
-	<!-- Monday -->
+
+{% if not user.nutritionist_id %}
+ <div style="display: flex;
+  justify-content: center;
+  align-items: center;">
+    <!-- Add the button -->
+    <button type="button" class="btn btn-primary btn-lg btn-block" style="align:center;" data-toggle="modal" data-target="#nutritionist_modal">Find a Nutritionist</button>
+</div>
+{% else %}
+<div class="card nutritionist-card border-primary mb-3" id="personal-nutritionist-{{ nutritionist.id }}">
+
+              <div class="row g-0 align-items-center" >
+                  <div class="col-md-3">
+                    <img src="{{ url_for('static', filename='profile_pictures/' + nutritionist.profile_picture) }}" alt="Profile Picture" class="img-fluid rounded-circle p-4" style="max-width: 18vw; height: 18vw;">
+                  </div>
+
+                  <div class="col-md-9 mt-3 mb-3">
+                      <!-- Display nutritionist's name, contact info, etc. -->
+                      <h5 class="card-title nutritionist-name"><strong>My Nutritionist - {{ nutritionist.first_name }} {{ nutritionist.last_name }}</strong></h5>
+                      <p class="card-text">{{ nutritionist.city }}, {{ nutritionist.country }}</p>
+                      <p class="card-text"><strong>Email: </strong>{{ nutritionist.email }}</p>
+                      <p class="card-text"><strong>Phone Number: </strong>{{ nutritionist.phone_number }}</p>
+                      <p class="card-text"><strong>Address: </strong>{{ nutritionist.address }}</p>
+
+                       
+                  </div>
+              </div>
+
+
+            
+             
+              <div class="accordion"  id="accordion-{{ nutritionist.id }}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="details-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ nutritionist.id }}" aria-expanded="false" aria-controls="collapse-{{ nutritionist.id }}">
+                            Details
+                            </button>
+                        </h2>
+
+                        <div id="collapse-{{ nutritionist.id }}" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion-{{ nutritionist.id }}">
+                          <div class="accordion-body">
+                             
+                              <div class="card experience-card border-primary mb-3">
+
+                                    <div class="card-header">
+                                        <h5>Experience</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {% for entry in experience_entries %}
+                                          <div class="experience-entry" >
+                                            <h5>{{ entry.job }}</h5>
+                                            <p style="margin-bottom: 0.1rem;">At <strong>{{ entry.company }}</strong></p>
+                                            <p style="margin-bottom: 0.1rem;">{{ entry.job_description }}</p>
+                                            <p class="small">{{ entry.job_start_year }} - {{ entry.job_end_year }}</p>
+                                            <hr>
+                                          </div>
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="card education-card border-primary mb-3">
+
+                                    <div class="card-header">
+                                        <h5>Education</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {% for entry in education_entries %}
+                                          <div class="education-entry">
+                                            <h5>{{ entry.degree }} in {{ entry.field_of_study }}</h5>
+                                            <p style="margin-bottom: 0.1rem;">{{ entry.school }}</p>
+                                            <p class="small">{{ entry.education_start_year }} - {{ entry.education_end_year }}</p>
+                                            <hr>
+                                          </div>
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+
+                                <div class="card interests-card border-primary mb-3">
+
+                                    <div class="card-header">
+                                        <h5>Related Interests</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {% for entry in interest_entries %}
+                                          <div class="interest-entry">
+                                            <h5>{{ entry.interest }}</h5>
+                                            <p>{{ entry.interest_description }}</p>
+                                            <hr>
+                                          </div>
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+
+
+                          </div>
+                        </div>
+                    </div>
+              </div>
+
+            </div>
+{% endif %}
+
+<!-- Add the modal for displaying nutritionists -->
+<div class="modal fade" id="nutritionist_modal" tabindex="-1" role="dialog" aria-labelledby="nutritionist_modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nutritionist_modal_label">Nutritionists</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Search input field -->
+        <input type="text" id="search_input" class="form-control mb-3" placeholder="Search for a nutritionist">
+          
+        <!-- Content of the modal -->
+        <div class="nutritionist-cards">
+          {% for nutritionist in nutritionists %}
+            <!-- Display nutritionist information as cards -->
+            <div class="card nutritionist-card border-primary mb-3" id="nutritionist-{{ nutritionist.id }}">
+
+              <div class="row g-0 align-items-center" >
+                  <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='profile_pictures/' + nutritionist.profile_picture) }}" alt="Profile Picture" class="img-fluid rounded-circle p-4" style="max-width: 18vw; height: 18vw;">
+                  </div>
+
+                  <div class="col-md-8 mt-3 mb-3">
+                      <!-- Display nutritionist's name, contact info, etc. -->
+                      <h5 class="card-title nutritionist-name"><strong>{{ nutritionist.first_name }} {{ nutritionist.last_name }}</strong></h5>
+                      <p class="card-text">{{ nutritionist.city }}, {{ nutritionist.country }}</p>
+                      <p class="card-text"><strong>About:</strong></p>
+                      {{ nutritionist.description }}
+                  </div>
+              </div>
+            
+             
+              <div class="accordion"  id="accordion-{{ nutritionist.id }}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="details-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ nutritionist.id }}" aria-expanded="false" aria-controls="collapse-{{ nutritionist.id }}">
+                            Details
+                            </button>
+                        </h2>
+
+                        <div id="collapse-{{ nutritionist.id }}" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion-{{ nutritionist.id }}">
+                          <div class="accordion-body">
+                          
+                            <div class="card experience-card border-primary mb-3">
+
+                                    <div class="card-header">
+                                        <h5>Experience</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {% for entry in experience_entries %}
+                                          {% if entry.nutritionist_id == nutritionist.id %}
+                                          <div class="experience-entry" >
+                                            <h5>{{ entry.job }}</h5>
+                                            <p style="margin-bottom: 0.1rem;">At <strong>{{ entry.company }}</strong></p>
+                                            <p style="margin-bottom: 0.1rem;">{{ entry.job_description }}</p>
+                                            <p class="small">{{ entry.job_start_year }} - {{ entry.job_end_year }}</p>
+                                            <hr>
+                                          </div>
+                                          {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="card education-card border-primary mb-3">
+
+                                    <div class="card-header">
+                                        <h5>Education</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {% for entry in education_entries %}
+                                          {% if entry.nutritionist_id == nutritionist.id %}
+                                          <div class="education-entry">
+                                            <h5>{{ entry.degree }} in {{ entry.field_of_study }}</h5>
+                                            <p style="margin-bottom: 0.1rem;">{{ entry.school }}</p>
+                                            <p class="small">{{ entry.education_start_year }} - {{ entry.education_end_year }}</p>
+                                            <hr>
+                                          </div>
+                                          {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+
+                                <div class="card interests-card border-primary mb-3">
+
+                                    <div class="card-header">
+                                        <h5>Related Interests</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {% for entry in interest_entries %}
+                                          {% if entry.nutritionist_id == nutritionist.id %}
+                                          <div class="interest-entry">
+                                            <h5>{{ entry.interest }}</h5>
+                                            <p>{{ entry.interest_description }}</p>
+                                            <hr>
+                                          </div>
+                                          {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+                          
+                          </div>
+
+                          <div class="accordion-footer d-flex justify-content-end mb-2">
+                              <form action="{{ url_for('views.send_request', nutritionist_id=nutritionist.id) }}" method="POST" class="d-inline-block">
+                                <button type="submit" class="btn btn-secondary">Send Request</button>
+                              </form>
+
+                          </div>
+                        </div>
+                    </div>
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<div>
-	<!-- Tuesday -->
+
+
+<h1 align="center" class="mt-5 mb-3">My Plan</h1>
+
+<div class="container">
+    <div class="row" id="card-container">
+        <!-- Cards will be dynamically added here -->
+    </div>
 </div>
 
-<div>
-	<!-- Wednesday -->
+
 </div>
 
-<div>
-	<!-- Thursday -->
-</div>
-
-<div>
-	<!-- Friday -->
-</div>
-
-<div>
-	<!-- Saturday -->
-</div>
-
-<div>
-	<!-- Sunday -->
-</div>
-
-<div>
-	<!-- Shopping List -->
-</div>
 {% endblock %}

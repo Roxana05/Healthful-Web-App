@@ -9,130 +9,68 @@
 </div>
 
 <div class="container">
-  <h2>Breakfast</h2>
-  <div id="breakfast-carousel" class="carousel slide mt-4" data-bs-ride="false">
-    <div class="carousel-inner">
-      {% if recipe_list %}
-        {% set breakfast_recipes = recipe_list|selectattr('recipe_type', 'eq', 'breakfast')|list %}
-        {% for recipe in breakfast_recipes %}
-          <div class="carousel-item{% if loop.index0 == 0 %} active{% endif %}">
-            <div class="row">
-              {% for recipe in breakfast_recipes[loop.index0:loop.index0+4] %}
-                <div class="col-lg-3 col-md-6 mb-4">
-                  <div class="recipe-tile">
-                    <img src="{{ url_for('static', filename='profile_pictures/PFP_Marin_Chan.jpg') }}" alt="Recipe Image" class="img-fluid">
-                    <h5>{{ recipe.title }}</h5>
-                    <!-- Display other recipe details -->
+  {% set recipe_types = ['breakfast', 'lunch', 'dinner', 'snack'] %}
+
+  {% for recipe_type in recipe_types %}
+    <h2>{{ recipe_type.capitalize() }}</h2>
+    <div id="{{ recipe_type|lower }}-carousel" class="carousel slide mt-4" data-bs-ride="false">
+      <div class="carousel-inner">
+        {% if recipe_list %}
+          {% set recipes = recipe_list|selectattr('recipe_type', 'eq', recipe_type)|list %}
+          {% set chunks = recipes|batch(4) %}
+          {% set index = namespace(value=0) %}
+          {% for chunk in chunks %}
+            <div class="carousel-item{% if loop.index == 1 %} active{% endif %}">
+              <div class="row">
+                {% for recipe in chunk %}
+                  {% set recipe_index = index.value %}
+                  {% set index.value = index.value + 1 %}
+                  <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="recipe-tile" data-bs-toggle="modal" data-bs-target="#recipe-modal-{{ recipe_type|lower }}-{{ recipe_index }}">
+                      <img src="{{ url_for('static', filename='profile_pictures/PFP_Marin_Chan.jpg') }}" alt="Recipe Image" class="img-fluid">
+                      <h5>{{ recipe.title }}</h5>
+                    </div>
                   </div>
-                </div>
-              {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#{{ recipe_type|lower }}-carousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#{{ recipe_type|lower }}-carousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    
+    {% for recipe in recipes %}
+      <!-- Modal -->
+      <div class="modal fade" id="recipe-modal-{{ recipe_type|lower }}-{{ loop.index0 }}" tabindex="-1" aria-labelledby="recipe-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="recipe-modal-label">{{ recipe.title }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>{{ recipe.description }}</p>
+              <!-- Include additional recipe details as needed -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <!-- Add additional modal buttons if required -->
             </div>
           </div>
-        {% endfor %}
-      {% endif %}
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#breakfast-carousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#breakfast-carousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
+        </div>
+      </div>
+    {% endfor %}
+    
+  {% endfor %}
 </div>
 
-<!--
-<div class="container">
-  <h2 class="mt-4">Lunch</h2>
-  <div id="lunch-carousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-    {% if recipe_list %}
-      {% for recipe in recipe_list if recipe and recipe.recipe_type == 'lunch' %}
-      {% if loop.index0 % 5 == 0 %}
-      <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
-      {% endif %}
-        <div class="recipe-tile">
-          <img src="{{ url_for('static', filename='profile_pictures/PFP_Marin_Chan.jpg') }}" alt="Recipe Image">
-          <h5>{{ recipe.title }}</h5>
-          <!-- Display other recipe details 
-        </div>
-        {% if (loop.index + 1) % 5 == 0 or loop.last %}
-      </div>
-      {% endif %}
-      {% endfor %}
-    {% endif %}
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#lunch-carousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#lunch-carousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</div>
 
-<div class="container">
-  <h2 class="mt-4">Dinner</h2>
-  <div id="dinner-carousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-    {% if recipe_list %}
-      {% for recipe in recipe_list if recipe and recipe.recipe_type == 'dinner' %}
-      {% if loop.index0 % 5 == 0 %}
-      <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
-      {% endif %}  
-        <div class="recipe-tile">
-          <img src="{{ url_for('static', filename='profile_pictures/PFP_Marin_Chan.jpg') }}" alt="Recipe Image">
-          <h5>{{ recipe.title }}</h5>
-          <!-- Display other recipe details 
-        </div>
-        {% if (loop.index + 1) % 5 == 0 or loop.last %}
-      </div>
-      {% endif %}
-      {% endfor %}
-    {% endif %}
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#dinner-carousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#dinner-carousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</div>
-
-<div class="container">
-  <h2 class="mt-4">Snack</h2>
-  <div id="snack-carousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-    {% if recipe_list %}
-      {% for recipe in recipe_list if recipe and recipe.recipe_type == 'snack' %}
-      {% if loop.index0 % 5 == 0 %}
-      <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
-      {% endif %}  
-        <div class="recipe-tile">
-          <img src="{{ url_for('static', filename='profile_pictures/PFP_Marin_Chan.jpg') }}" alt="Recipe Image">
-          <h5>{{ recipe.title }}</h5>
-          <!-- Display other recipe details 
-        </div>
-        {% if (loop.index + 1) % 5 == 0 or loop.last %}
-      </div>
-      {% endif %}
-      {% endfor %}
-    {% endif %}
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#snack-carousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#snack-carousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</div> -->
 {% endblock %}

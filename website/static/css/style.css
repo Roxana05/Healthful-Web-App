@@ -15,3 +15,41 @@
     .recipe-tile h {
         margin-top: 5px;
     }
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: transparent;
+    border: none;
+    color: transparent;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(81, 196, 211, 0.5);
+}
+
+.recom {
+    border-right: 1px solid white;
+}
+
+.equidistant-columns {
+    width: calc(100% / 8); /* Adjust the number 8 based on the number of columns */
+}
+
+
+.profile-picture-container {
+    width: 20vw; /* Adjust as needed */
+    height: 20vw; /* Adjust as needed */
+    overflow: hidden;
+    border-radius: 50%; /* This makes the container circular */
+}
+
+.profile-picture {
+    width: 100%; /* Make the image take up the entire container */
+    height: 100%; /* Make the image take up the entire container */
+    object-fit: cover; /* This scales the image while preserving its aspect ratio */
+}
+
+.hidden {
+    display: none;
+}

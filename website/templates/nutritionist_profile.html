@@ -3,123 +3,355 @@
 
 {% block content %}
 
-<div class="profile-info">
-  <h3>My Information</h3>
 
-  <!-- Display the client's profile picture -->
-  <img src="{{ profile_picture }}" class="img-fluid" alt="Profile Picture">
-  <br><br>
-  <button id="edit_profile_btn" class="btn btn-primary">Change Profile Picture</button>
-    <!-- Form to update profile picture-->
-  <form method="POST" enctype="multipart/form-data" style="display: none;" id="pfp">
-    <!-- Profile picture -->
-    <div class="form-group">
-      <label for="profile_picture">Profile Picture:</label>
-      <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
-      <button type="submit" class="btn btn-success mt-3">Save</button>
+<div class="container p-5">
+
+<!-- Nutritionist Information and History -->
+<div class="nutritionist-data">
+    <div class="profile-info">
+        <div class="row">
+          <div class="col-md-4">
+              <!-- Display the client's profile picture -->
+              <div class="profile-picture-container">
+                <img src="{{ profile_picture }}" class="profile-picture" alt="Profile Picture">
+              </div>
+
+            
+
+          </div>
+   
+          <div class="col-md-8">
+              <!-- Display the nutritionist's information -->
+              <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>Phone Number:</strong> {{ user.phone_number }} </p>
+              <p><strong>Address:</strong> {{ user.address }}, {{ user.city }}, {{ user.country }} </p>
+              <p><strong>Description:</strong><br> {{ user.description }} </p>
+
+              <button id="edit_profile_btn" class="btn btn-primary">Update Profile</button>
+
+          </div>
+          <!-- Form to update profile information-->
+              <form method="POST" enctype="multipart/form-data" style="display: none;" id="pfp">
+                  <br><br>
+                <!-- Profile picture -->
+                <div class="form-group col-md-4">
+                  <label for="profile_picture">Profile Picture:</label>
+                  <input type="file" class="form-control-file form-control" id="profile_picture" name="profile_picture">
+                  <button type="submit" class="btn btn-success mt-1">Save</button><br><br>
+                </div>
+              </form>
+              <br>
+
+
+              <form method="POST" id="profile_info" style="display: none;" class="col-md-4">
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                  <label for="phone_number">Phone Number:</label>
+                  <input type="text" class="form-control" id="phone_number" name="phone_number">
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                  <label for="address">Address:</label>
+                  <input type="text" class="form-control" id="address" name="address">
+                </div>
+
+                <!-- City -->
+                <div class="form-group">
+                  <label for="city">City:</label>
+                  <input type="text" class="form-control" id="city" name="city">
+                </div>
+
+                <!-- Country -->
+                <div class="form-group">
+                  <label for="country">Country:</label>
+                  <input type="text" class="form-control" id="country" name="country">
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                  <label for="description">Description:</label>
+                  <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+
+                <br>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary">Update</button>
+              </form>
     </div>
-  </form>
+    <br><br>
 
-  <br><br>
+    <div class="card experience-card border-primary mb-3">
 
-  <!-- Display the client's first name, last name, and email -->
-  <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-  <p><strong>Email:</strong> {{ user.email }}</p>
+        <div class="card-header">
+            <h5>Experience
+            <i class="fa-solid fa-plus add-button" style="float:right;" data-toggle="modal" data-target="#add-experience-modal"></i>
+            </h5>
+        </div>
 
-  <!-- Display the client's stats -->
-  <p><strong>Age:</strong> {{ user.age }} </p>
-  
-  <!-- Add recipes option -->
-  <button class="btn btn-primary" id="add-recipe-btn" onclick="toggleRecipeForm()">Add Recipe</button>
+        <div class="card-body">
+            {% for entry in experience_entries %}
+              <div class="experience-entry" >
+                <h5>{{ entry.job }}</h5>
+                <p style="margin-bottom: 0.1rem;">At <strong>{{ entry.company }}</strong></p>
+                <p style="margin-bottom: 0.1rem;">{{ entry.job_description }}</p>
+                <p class="small">{{ entry.job_start_year }} - {{ entry.job_end_year }}</p>
+                <hr>
+              </div>
+            {% endfor %}
+        </div>
 
-  <div id="recipe-form" style="display: none;">
-  <form method="POST" action="{{ url_for('views.nutritionist_profile') }}">
-
-    <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" 
-            class="form-control" 
-            id="title" 
-            name="title" 
-            placeholder="Enter the title"
-        />
     </div>
 
-    <div class="form-group">
-        <select class="form-control" name="recipe_type" required>
-          <option value="breakfast">Breakfast</option>
-          <option value="lunch">Lunch</option>
-          <option value="dinner">Dinner</option>
-          <option value="snack">Snack</option>
-        </select>
+
+    <div class="card education-card border-primary mb-3">
+
+        <div class="card-header">
+            <h5>Education
+            <i class="fa-solid fa-plus add-button" style="float:right;" data-toggle="modal" data-target="#add-education-modal"></i>
+            </h5>
+        </div>
+
+        <div class="card-body">
+            {% for entry in education_entries %}
+              <div class="education-entry">
+                <h5>{{ entry.degree }} in {{ entry.field_of_study }}</h5>
+                <p style="margin-bottom: 0.1rem;">{{ entry.school }}</p>
+                <p class="small">{{ entry.education_start_year }} - {{ entry.education_end_year }}</p>
+                <hr>
+              </div>
+            {% endfor %}
+        </div>
+
     </div>
+
+    <div class="card interests-card border-primary mb-3">
+
+        <div class="card-header">
+            <h5>Related Interests
+            <i class="fa-solid fa-plus add-button" type="button" style="float:right;" data-toggle="modal" data-target="#add-related-modal"></i>
+            </h5>
+        </div>
+
+        <div class="card-body">
+            {% for entry in interest_entries %}
+              <div class="interest-entry">
+                <h5>{{ entry.interest }}</h5>
+                <p>{{ entry.interest_description }}</p>
+                <hr>
+              </div>
+            {% endfor %}
+        </div>
+
+    </div>
+         
+    <div class="modal fade" id="add-experience-modal" tabindex="-1" role="dialog" aria-labelledby="add-section-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="add-section-modal-label">Add Experience</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" id="add-experience">
+              <div class="form-group">
+                <label for="job">Job Title</label>
+                <input type="text" class="form-control" id="job" name="job">
+              </div>
+              <div class="form-group">
+                <label for="company">Company</label>
+                <input type="text" class="form-control" id="company" name="company">
+              </div>
+
+              <div class="form-group">
+                <label for="job-description">Description</label>
+                <textarea class="form-control" id="job-description" name="job-description"></textarea>
+              </div>
+
+              <div class="row">
+                  <div class="form-group col-md-4">
+                    <label for="job-start-year">Start Year</label>
+                    <input type="number" class="form-control" id="job-start-year" name="job-start-year">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="job-end-year">End Year</label>
+                    <div class="d-flex align-items-center">
+                      <input type="number" class="form-control mr-2" id="job-end-year" name="job-end-year">
+                  </div>
+              </div>
+              </div>
+        
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="add-education-modal" tabindex="-1" role="dialog" aria-labelledby="add-section-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="add-section-modal-label">Add Education</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" id="add-education">
+              <div class="form-group">
+                <label for="school">School</label>
+                <input type="text" class="form-control" id="school" name="school">
+              </div>
+              <div class="form-group">
+                <label for="degree">Degree</label>
+                <input type="text" class="form-control" id="degree" name="degree">
+              </div>
+              <div class="form-group">
+                <label for="field-of-study">Field of Study</label>
+                <input type="text" class="form-control" id="field-of-study" name="field-of-study">
+              </div>
+
+              <div class="row">
+                  <div class="form-group col-md-4">
+                    <label for="education-start-year">Start Year</label>
+                    <input type="number" class="form-control" id="education-start-year" name="education-start-year">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="education-end-year">End Year</label>
+                    <div class="d-flex align-items-center">
+                      <input type="number" class="form-control mr-2" id="education-end-year" name="education-end-year">
+                  </div>
+              </div>
+              </div>
+        
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="add-related-modal" tabindex="-1" role="dialog" aria-labelledby="add-section-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="add-section-modal-label">Add Related Interest</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" id="add-interest">
+              <div class="form-group">
+                <label for="interest">Title</label>
+                <input type="text" class="form-control" id="interest" name="interest">
+              </div>
+
+              <div class="form-group">
+                <label for="interest-description">Description</label>
+                <textarea class="form-control" id="interest-description" name="interest-description"></textarea>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Add recipes option -->
+ <button class="btn btn-primary" id="add-recipe-btn" onclick="toggleRecipeForm()">Add Recipe</button>
+
+<div id="recipe-form" style="display: none;">
+      <form method="POST" action="{{ url_for('views.nutritionist_profile') }}">
+
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" 
+                class="form-control" 
+                id="title" 
+                name="title" 
+                placeholder="Enter the title"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="title">Type:</label>
+            <select class="form-control" name="recipe_type" required>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
+        </div>
     
-    <div class="form-group">
-       <label for="ingredients">Ingredients</label>
-       <div id="ingredient-fields">
-           <div class="form-row">
-               <div class="col">
-                    <input type="text" 
-                        class="form-control" 
-                        id="ingredient-1" 
-                        name="ingredient-1" 
-                        placeholder="Ingredient"
-                        required
-                    />
-                </div>
-                <div class="col">
-                    <input type="text" 
-                        class="form-control" 
-                        id="amount-1" 
-                        name="amount-1" 
-                        placeholder="Enter amount"
-                        required
-                    />
-                </div>
-            </div>
-        </div>
-        <button type="button" class="btn btn-outline-secondary mt-2 btn-sm" id="add-ingredient">Add Ingredient</button>
-    </div>
-
-    <div class="form-group">
-        <label for="description">Recipe Description:</label>
-        <textarea class="form-control" id="description" name="description" required></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-outline-primary btn-sm">Add Recipe</button>
-  </form>
-  
-</div>
-
-
-</div>
-<br><br>
-
-
-
-
-
-<!-- Notification Modal -->
-        <div id="notification_modal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">New Client Request</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        <div class="form-group">
+           <label for="ingredients">Ingredients</label>
+           <div id="ingredient-fields">
+               <div class="form-group row">
+                   <div class="col-md-4" style="padding-right: 0;">
+                        <input type="text" 
+                            class="form-control" 
+                            id="ingredient-1" 
+                            name="ingredient-1" 
+                            placeholder="Ingredient"
+                            required
+                        />
                     </div>
-                    <div class="modal-body">
-                        <p>Client: {{ client_name }}</p>
-                        <p>Email: {{ client_email }}</p>
-                        <p>Do you want to accept the request?</p>
+                    <div class="col-md-2" style="padding-right: 0;">
+                        <input type="text" 
+                            class="form-control" 
+                            id="amount-1" 
+                            name="amount-1" 
+                            placeholder="Amount"
+                            required
+                        />
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="acceptButton">Accept</button>
-                        <button type="button" class="btn btn-danger" id="declineButton">Decline</button>
+                    <div class="form-group col-md-2">
+                        <select class="form-control"
+                                name="measurement-1"
+                                id="measurement-1">
+                            <option value="grams">gr</option>
+                            <option value="kilograms">kg</option>
+                            <option value="mililiters">ml</option>
+                            <option value="liters">l</option>
+                            <option value="teaspoon">tsp</option>
+                            <option value="tablespoon">tbsp</option>
+                            <option value="piece">pcs</option>
+                            <option value="pinch">pinch</option>
+                            <option></option>
+                        </select>
+                        
                     </div>
                 </div>
             </div>
+            <button type="button" class="btn btn-outline-secondary mt-2 btn-sm" id="add-ingredient">Add Ingredient</button>
         </div>
 
+        <div class="form-group">
+            <label for="description">Recipe Description:</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary btn-sm">Add Recipe</button>
+      </form>  
+</div>
+
+</div>
 {% endblock %}
+
+
+    <script src="{{ url_for('static', filename='add_recipe.js') }}"></script>

@@ -1,44 +1,3 @@
-$(document).ready(function () {
-    // Handle the accept button click event
-    $("#acceptButton").click(function () {
-        var clientId = $("#clientID").val();
-        var nutritionistId = $("#nutritionistID").val();
-
-        $.ajax({
-            url: '/accept_request',
-            type: 'POST',
-            data: { 'client_id': clientId, 'nutritionist_id': nutritionistId },
-            success: function (response) {
-                alert('Request accepted');
-                location.reload(); // Refresh the page or perform any other desired action
-            },
-            error: function (error) {
-                alert('Error accepting request');
-            }
-        });
-    });
-
-    // Handle the reject button click event
-    $("#rejectButton").click(function () {
-        var clientId = $("#clientID").val();
-        var nutritionistId = $("#nutritionistID").val();
-
-        $.ajax({
-            url: '/reject_request',
-            type: 'POST',
-            data: { 'client_id': clientId, 'nutritionist_id': nutritionistId },
-            success: function (response) {
-                alert('Request rejected');
-                location.reload(); // Refresh the page or perform any other desired action
-            },
-            error: function (error) {
-                alert('Error rejecting request');
-            }
-        });
-    });
-});
-
-
 //Toggle the "Add recipe" form on the Nutritionist's profile
 $(document).ready(function () {
     $("#edit_profile_btn").click(function () {
@@ -52,50 +11,8 @@ function toggleRecipeForm() {
 }
 
 
-// Dinamically add ingredients for a recipe
-var ingredientCounter = 2;
 
-// Add ingredient fields dynamically
-document.getElementById('add-ingredient').addEventListener('click', function () {
-    var ingredientFields = document.getElementById('ingredient-fields');
-
-    var formRow = document.createElement('div');
-    formRow.classList.add('form-row', 'mt-2');
-
-    var ingredientCol = document.createElement('div');
-    ingredientCol.classList.add('col');
-
-    var ingredientInput = document.createElement('input');
-    ingredientInput.setAttribute('type', 'text');
-    ingredientInput.classList.add('form-control');
-    ingredientInput.setAttribute('id', 'ingredient-' + ingredientCounter);
-    ingredientInput.setAttribute('name', 'ingredient-' + ingredientCounter);
-    ingredientInput.setAttribute('placeholder', 'Ingredient');
-    ingredientInput.required = true;
-
-    var amountCol = document.createElement('div');
-    amountCol.classList.add('col');
-
-    var amountInput = document.createElement('input');
-    amountInput.setAttribute('type', 'text');
-    amountInput.classList.add('form-control');
-    amountInput.setAttribute('id', 'amount-' + ingredientCounter);
-    amountInput.setAttribute('name', 'amount-' + ingredientCounter);
-    amountInput.setAttribute('placeholder', 'Amount');
-    amountInput.required = true;
-
-    ingredientCol.appendChild(ingredientInput);
-    amountCol.appendChild(amountInput);
-    formRow.appendChild(ingredientCol);
-    formRow.appendChild(amountCol);
-
-    ingredientFields.appendChild(formRow);
-
-    ingredientCounter++;
-});
-
-
-// Recipe carousel
+/* Recipe carousel
 var carouselElement = document.getElementById("breakfast-carousel");
 var carouselItems = carouselElement.querySelectorAll(".carousel-item");
 var visible_items;
@@ -134,6 +51,114 @@ function updateVisibleItems() {
 
 updateVisibleItems();
 
-window.addEventListener("resize", function () {
-    updateVisibleItems();
+ window.addEventListener("resize", function () {
+   updateVisibleItems();
+ });
+
+ */
+
+//Search function for nutritionists on the My_Plan page
+$(document).ready(function () {
+    const searchInput = $("#search_input");
+    const nutritionistCards = $(".nutritionist-card");
+
+    searchInput.on("input", function () {
+        const searchValue = searchInput.val().toLowerCase();
+
+        nutritionistCards.each(function () {
+            const nutritionistName = $(this).find(".nutritionist-name").text().toLowerCase();
+
+            if (nutritionistName.includes(searchValue)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
 });
+
+
+
+
+
+//My_plan day cards
+document.addEventListener('DOMContentLoaded', function () {
+    const cardContainer = document.getElementById('card-container');
+
+    // Get today's date
+    const today = new Date();
+
+    // Create cards for the next 7 days
+    for (let i = 0; i < 7; i++) {
+        const cardDate = new Date(today);
+        cardDate.setDate(today.getDate() + i);
+
+        const card = document.createElement('div');
+        card.classList.add('mb-4');
+        card.innerHTML = `
+            <div class="card">
+                <div class="card-header"><h4>${getCardTitle(cardDate)}</h4></div>
+                <div class="card-body row">
+                    <div class="col-md-3">
+                        <h5 class="meal-title">Breakfast</h5>
+                        <!-- Add recipe image and title here (if available) -->
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="meal-title">Lunch</h5>
+                        <!-- Add recipe image and title here (if available) -->
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="meal-title">Dinner</h5>
+                        <!-- Add recipe image and title here (if available) -->
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="meal-title">Snack</h5>
+                        <!-- Add recipe image and title here (if available) -->
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Create a new row for each card
+        const cardRow = document.createElement('div');
+        cardRow.classList.add('row', 'mb-4');
+        cardRow.appendChild(card);
+
+        // Append the row to the container
+        cardContainer.appendChild(cardRow);
+    }
+});
+
+function getCardTitle(date) {
+    if (isToday(date)) {
+        return `Today - ${formatDate(date)}`;
+    } else {
+        return `${getDayOfWeek(date.getDay())} - ${formatDate(date)}`;
+    }
+}
+
+function isToday(date) {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+}
+
+function isSameDate(date1, date2) {
+    return (
+        date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear()
+    );
+}
+
+function getDayOfWeek(dayIndex) {
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return daysOfWeek[dayIndex];
+}
+
+function formatDate(date) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+}
+

@@ -1,0 +1,296 @@
+{% block content %}
+
+<div class="bs-doc-section medical-history mt-5">
+    <h3>Medical History</h3>
+
+    <div class="afflictions mt-4 card border-primary">
+        <h5 class="card-header">Afflictions</h5>
+        <ul class="list-group item-list">
+            {% for affliction in afflictions %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ affliction.affliction_name }}
+                {% if current_user.account_type == 'client' %}
+                <button class="btn btn-danger delete-btn pt-1 pb-1 mt-1 mb-1" type="button" data-entry-type="affliction" data-entry-id="{{ affliction.id }}">-</button>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="medication mt-4 card border-primary">
+        <h5 class="card-header">Medication</h5>
+        <ul class="list-group item-list">
+            {% for medication in medications %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ medication.medication_name }}
+                {% if current_user.account_type == 'client' %}
+                <button class="btn btn-danger delete-btn pt-1 pb-1 mt-1 mb-1" type="button" data-entry-type="medication" data-entry-id="{{ medication.id }}">-</button>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="allergies mt-4 card border-primary">
+        <h5 class="card-header">Allergies & Intolerances</h5>
+        <ul class="list-group item-list">
+            {% for allergy in allergies %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ allergy.allergy_name }}
+                {% if current_user.account_type == 'client' %}
+                <button class="btn btn-danger delete-btn pt-1 pb-1 mt-1 mb-1" type="button" data-entry-type="allergy" data-entry-id="{{ allergy.id }}">-</button>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+<div class="bs-doc-section mt-5">
+    <h3>Recommendations</h3>
+    <div class="accordion accordion-flush" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+            General
+          </button>
+        </h2>
+
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+          <div class="accordion-body">
+            <ul class="list-group" id="item-list">
+              <!-- List items -->
+              {% for recommendation in recommendations %}
+                {% if recommendation.rec_category == "general" %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ recommendation.content }}
+                    {% if current_user.account_type == 'nutritionist' %}
+                    <button class="btn btn-danger delete-btn" type="button" data-entry-type="recommendation" data-entry-id="{{ recommendation.id }}">-</button>
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Practical
+          </button>
+        </h2>
+
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
+          <div class="accordion-body">
+            <ul class="list-group" id="item-list">
+              <!-- List items -->
+              {% for recommendation in recommendations %}
+                {% if recommendation.rec_category == "practical" %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ recommendation.content }}
+                    {% if current_user.account_type == 'nutritionist' %}
+                    <button class="btn btn-danger delete-btn" type="button" data-entry-type="recommendation" data-entry-id="{{ recommendation.id }}"">-</button>
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Physical Activity
+          </button>
+        </h2>
+
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample" style="">
+          <div class="accordion-body">
+            <ul class="list-group" id="item-list">
+              <!-- List items -->
+              {% for recommendation in recommendations %}
+                {% if recommendation.rec_category == "physical" %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ recommendation.content }}
+                    {% if current_user.account_type == 'nutritionist' %}
+                    <button class="btn btn-danger delete-btn" type="button" data-entry-type="recommendation" data-entry-id="{{ recommendation.id }}"">-</button>
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+ <div class="mt-5">
+ <h2 align="center" class="pb-2">Food Recommendations</h2>
+ <table class="table">
+  
+  <thead align="center">
+    <tr>
+      <th scope="col"></th>
+      <th scope="col" class="equidistant-columns">Grains</th>
+      <th scope="col" class="equidistant-columns">Vegetables</th>
+      <th scope="col" class="equidistant-columns">Roots</th>
+      <th scope="col" class="equidistant-columns">Legumes</th>
+      <th scope="col" class="equidistant-columns">Fruits</th>
+      <th scope="col" class="equidistant-columns">Meat</th>
+      <th scope="col" class="equidistant-columns">Dairy</th>
+      <th scope="col" class="equidistant-columns">Nuts</th>
+      <th scope="col" class="equidistant-columns">Other</th>
+    </tr>
+  </thead>
+  <tbody style="text-align: center; vertical-align: middle;">
+    <tr class="table-success">
+      <td class="recom">R<br>E<br>C<br>O<br>M<br>M<br>E<br>N<br>D<br>E<br>D</td>
+      <td>
+       Whole bread<br> 
+       Wild rice<br> 
+	   Brown rice<br>
+	   Whole grain pasta<br> 
+	   Oats<br>
+	   Buckwheat<br>
+	   Quinoa<br> 
+	   Bulgur<br>
+      </td>
+      <td>All of them</td>
+      <td>
+          Potato<br>
+          Sweet Potato
+      </td>
+      <td>
+        Beans<br>
+    	Chickpeas<br>  
+	    Soy<br> 
+	    Lentils<br> 
+    	Peas<br>
+      </td>
+      <td>
+        Fresh<br>
+        Frozen
+      </td>
+      <td>
+        Chicken<br>
+	    Turkey<br> 
+	    Fish (fresh, frozen or canned)<br>
+      </td>
+      <td>
+        Yogurt<br>
+	    Cottage cheese<br>
+	    Milk 1,5%<br>
+	    Vegan milk<br>
+        (without sugar)
+      </td>
+      <td>
+        Nuts<br>
+	    Almonds <br>
+	    Cashews<br> 
+	    Hazelnuts<br>
+      </td>
+      <td>Eggs</td>
+    </tr>
+    <tr class="table-danger">
+      <td class="recom">L<br>I<br>M<br>I<br>T</td>
+      <td>
+        Pastries<br>
+	    Sweets <br>
+	    Breakfast cereals with sugar<br>
+	    Soft drinks<br>
+	    Chips<br>
+	    White bread<br>
+	    White rice <br>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+        Candied fruit<br> 
+	    High sugar jam<br>
+	    Coconut in high quantities<br>
+      </td>
+      <td>
+        Sausages<br>
+	    Salami <br>
+	    Bacon <br>
+	    High fat pork <br>
+      </td>
+      <td>
+        Yogurt with high sugar <br>
+    	High fat cheeses<br>
+        (Camembert, Brie, Gorgonzola) 
+
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+{% if current_user.account_type == 'nutritionist' %}
+ <a href="{{ url_for('views.client_list') }}" class="btn btn-primary mt-3">Return to Client List</a>
+{% endif %}
+</div>
+
+
+{% endblock %}
+
+<script src="{{ url_for('static', filename='index.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+    $(".delete-btn").click(function () {
+        const entryType = $(this).data("entry-type");
+        const entryId = $(this).data("entry-id");
+        const clientId = {{ client.id }};
+
+        let confirmationMessage = "";
+        let deleteUrl = "";
+
+        switch (entryType) {
+            case "affliction":
+                confirmationMessage = "Are you sure you want to delete this affliction?";
+                deleteUrl = `/delete-affliction/${entryId}`;
+                break;
+            case "medication":
+                confirmationMessage = "Are you sure you want to delete this medication?";
+                deleteUrl = `/delete-medication/${entryId}`;
+                break;
+            case "allergy":
+                confirmationMessage = "Are you sure you want to delete this allergy/intolerance?";
+                deleteUrl = `/delete-allergy/${entryId}`;
+                break;
+            case "recommendation":
+                confirmationMessage = "Are you sure you want to delete this recommendation?";
+                deleteUrl = `/delete-recommendation/${clientId}/${entryId}`;
+                break;
+            default:
+                return;
+        }
+
+        if (confirm(confirmationMessage)) {
+            $.ajax({
+                url: deleteUrl,
+                type: "POST",
+                success: function (response) {
+                    // Reload the page after successful deletion
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("An error occurred while deleting the entry.");
+                }
+            });
+        }
+    });
+});
+
+</script>
