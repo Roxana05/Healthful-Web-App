@@ -1,0 +1,20 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-Application",
+      "appliesTo": "/",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-website",
+      "appliesTo": "website/",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-home",
+      "appliesTo": "website/temp/home.html",
+      "type": "launch"
+    }
+  ]
+}
