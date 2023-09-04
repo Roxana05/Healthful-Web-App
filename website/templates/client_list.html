@@ -2,8 +2,56 @@
 {% block title %} Client List {% endblock %}
 
 {% block content %}
+<div class="container p-5">
+
 <h1 align="center">Client List</h1>
 
+<div class="container">
+    <div class="notification mt-4"> 
+      {% for notification in user.notifications %}
+        {% if notification.status == 'pending' %}
+          <div class="card text-white bg-primary mt-4 ">
+            <div class="card-body">
+              <h5 class="card-title">Registry request from {{ notification.client.first_name }} {{ notification.client.last_name }}</h5>
+            </div>
+            <div class="card-footer d-flex justify-content-end">
+                <form action="{{ url_for('views.accept_request', notification_id=notification.id) }}" method="POST" class="d-inline-block me-2">
+                  <button type="submit" class="btn btn-light">Accept</button>
+                </form>
+                <form action="{{ url_for('views.decline_request', notification_id=notification.id) }}" method="POST" class="d-inline-block">
+                  <button type="submit" class="btn btn-danger">Decline</button>
+                </form>
+             </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+</div>
+
+<div class="client-list mt-5">
+    {% for client in clients %}
+  
+       <div class="card border-primary mb-3">
+          <div class="row g-0 align-items-center">
+            <div class="col-md-2">
+                {% if client.profile_picture %}
+                  <img src="{{ url_for('static', filename='profile_pictures/' + client.profile_picture) }}" alt="Profile Picture" class="img-fluid rounded-circle p-2" style="max-width: 12vw; height: 12vw;">
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+              <div class="card-body">
+                <h3 class="card-title">{{ client.first_name }} {{ client.last_name }}</h3>
+                <p class="card-text"><strong>Email:</strong> {{ client.email }}</p>
+                <!-- Add more client information here as needed -->
+                 <a href="{{ url_for('views.client_record', client_id=client.id) }}" class="btn btn-primary">Open</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+  {% endfor %}
+</div>
 
 
+</div>
 {% endblock %}

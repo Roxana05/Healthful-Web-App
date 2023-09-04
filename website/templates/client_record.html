@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %} Client Record {% endblock %}
+
+{% block content %}
+<div class="container p-5">
+
+ <div class="profile-info">
+  <!-- Display the client's profile picture -->
+  
+  <div class="row">
+    {% if client.profile_picture %}
+    <div class="col-md-4">
+        <img src="{{ url_for('static', filename='profile_pictures/' + client.profile_picture) }}" class="img-fluid rounded-circle" alt="Profile Picture" style="max-width: 19vw; height: 19vw;">
+    </div>
+    {% endif %}
+
+    <div class="col-md-8">
+        <!-- Display the client's first name, last name, and email -->
+        <h3>{{ client.first_name }} {{ client.last_name }}</h3>
+        <p class="mb-0 mt-3"><strong>Email:</strong> {{ client.email }}</p>
+
+        <!-- Display the client's stats -->
+        <p class="m-0"><strong>Age:</strong> {{ client_age }} </p>
+        <p class="m-0"><strong>Gender:</strong> {{ client.gender.capitalize() }} </p>
+        <p class="m-0"><strong>Height:</strong> {{ client.height }} cm</p>
+        <p class="m-0"><strong>Weight:</strong> {{ client.weight }} kg</p>
+        <p class="m-0"><strong>BMI:</strong> {{ client.bmi }}</p>
+        {% if client.goal %}
+        <p class="m-0"><strong>Goal:</strong> {{ client.goal.capitalize() }}</p>
+        {% else %}
+        <p class="m-0"><strong>Goal:</strong> Not set </p>
+        {% endif %}
+        <p class="m-0"><strong>Desired weight:</strong> {{ client.desired_weight }} kg</p>
+        <p><strong>Goal date:</strong> {{ client.desired_date }}</p>
+        <button id="edit-recommendations-btn" class="btn btn-primary mt-2 ml-0">Add Recommendations</button>
+    </div>
+  </div>
+ </div>
+
+ <!-- Update Recommendations -->
+ <div class="update-recommendations-form">
+
+
+    <form id="general-rec-form" method="POST" style="display: none;">
+  
+      <div id="general-section" class="col-md-4 mt-4">
+        <p class="mb-0">Add a General Recommendation:</p>
+        <div class="input-group mt-3">
+            <input type="text" name="new-general-input" id="new-general-input" class="form-control" placeholder="Add an item">
+            <button id="add-general-btn" class="btn btn-primary" type="submit">Add</button>
+        </div>
+      </div>
+
+    </form>
+
+    <form id="practical-rec-form" method="POST" style="display: none;">
+      <div id="practical-section"class="col-md-4 mt-4">
+        <p class="mb-0">Add a Practical Recommendation:</p>
+        <div class="input-group form-group">
+          <input type="text" name="new-practical-input" id="new-practical-input" class="form-control" placeholder="Add an item">
+          <button id="add-practical-btn" class="btn btn-primary" type="submit">Add</button>
+        </div>
+      </div>
+    </form>
+
+    <form id="physical-rec-form" method="POST" style="display: none;">
+      <div id="physical-section" class="col-md-4 mt-4">
+        <p class="mb-0">Add a Physical Activity Recommendation:</p>
+        <div class="input-group form-group mb-3">
+          <input type="text" name="new-physical-input" id="new-physical-input" class="form-control" placeholder="Add an item">
+          <button id="add-physical-btn" class="btn btn-primary" type="submit">Add</button>
+        </div>
+      </div>
+    </form>
+
+    <form id="meal-plan-form" method="POST" style="display: none;">
+      <div id="physical-section" class="col-md-4 mt-4">
+        <h5 class="mb-0">Set Meal Plan:</h5><br>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Breakfast calories:</label>
+          <input type="text" name="breakfast-input" id="new-breakfast-input" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Lunch calories:</label>
+          <input type="text" name="lunch-input" id="new-lunch-input" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Dinner calories:</label>
+          <input type="text" name="dinner-input" id="new-dinner-input" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Snack calories:</label>
+          <input type="text" name="snack-input" id="new-snack-input" class="form-control">
+        </div>
+      </div>
+      <button id="meal-plan-btn" class="btn btn-primary" type="submit">Update</button>
+    </form>
+
+ </div>
+
+ {% include "meal_plan.html" %}
+
+ <script>
+    $(document).ready(function () {
+        $("#edit-recommendations-btn").click(function () {
+            $("#general-rec-form, #practical-rec-form, #physical-rec-form, #meal-plan-form").toggle();
+        });
+    });
+
+</script>
+
+{% endblock %}
+
