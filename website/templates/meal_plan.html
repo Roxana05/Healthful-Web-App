@@ -1,8 +1,107 @@
 {% block content %}
 
+<<<<<<< Updated upstream
 <div class="bs-doc-section medical-history mt-5">
     <h3>Medical History</h3>
 
+=======
+
+<div class="meal-plan-values mt-4">
+     <div class="card">
+                <div class="card-header"><h4>Your Meal Plan</h4></div>
+                <div class="card-body row">
+                    <div class="col-md-3">
+                        <h5 align="center"><strong>Breakfast</strong></h5>  
+                        <h5 align="center">{{ client.breakfast_calories }} kcal</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 align="center"><strong>Lunch</strong></h5>
+                        <h5 align="center">{{ client.lunch_calories }} kcal</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 align="center"><strong>Dinner</strong></h5>
+                        <h5 align="center">{{ client.dinner_calories }} kcal</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 align="center"><strong>Snack</strong></h5>
+                        <h5 align="center">{{ client.snack_calories }} kcal</h5>
+                </div>
+            </div>
+</div>
+
+<div class="bs-doc-section medical-history mt-5">
+    <h3>Medical History</h3>
+
+    <!-- Weight and Food history accordion -->
+    <div class="bs-doc-section mt-3">
+        <div class="accordion accordion-flush" id="client-accordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading-one">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-one" aria-expanded="false" aria-controls="collapse-one">
+                <h5>Weight History</h5>
+              </button>
+            </h2>
+
+            <div id="collapse-one" class="accordion-collapse collapse" aria-labelledby="heading-one" data-bs-parent="#client-accordion" style="">
+              <div class="accordion-body">
+                <ul class="list-group" id="item-list">
+                 {% for weight in weights %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p>{{ weight.weight_date }}: <strong>{{ weight.recorded_weight }} kg</strong></p>
+                    </li>
+                 {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading-two">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-two" aria-expanded="false" aria-controls="collapse-two">
+                <h5>Meal History</h5>
+              </button>
+            </h2>
+
+            <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two" data-bs-parent="#client-accordion" style="">
+              <div class="accordion-body">
+                <ul class="list-group" id="item-list">
+                  {% set current_date = None %}
+                  <!-- List items -->
+                 {% for meal in meal_history %}
+                    {% if meal.meal_date != current_date %}
+                      <!-- Display the date once when it changes -->
+                      <li class="list-group-item font-weight-bold"><h5>{{ meal.meal_date }} - {{ meal.meal_name.capitalize() }}: <strong>{{ meal.recipe.title }}</strong></strong></h5>
+                      <!-- Update the current_date variable -->
+                      {% set current_date = meal.meal_date %}
+                    {% endif %}
+                    <!-- Display the meal_name entries as a bullet list -->
+                    <li class="list-group-item">
+                            <table border="1" align="center" class="table" style="width:100%;">
+                                <tr align="center"> 
+                                    <th>Energy (kcal)</th>
+                                    <th>Proteins (gr)</th>
+                                    <th>Carbohydrates (gr)</th>
+                                    <th>Fats (gr)</th>
+                                </tr>
+                                <tr align="center">
+                                    <td>{{ meal.recipe.total_calories }}</td>
+                                    <td>{{ meal.recipe.total_proteins }}</td>
+                                    <td>{{ meal.recipe.total_carbs }}</td>
+                                    <td>{{ meal.recipe.total_fats }}</td>
+                                </tr>
+                            </table>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+
+>>>>>>> Stashed changes
     <div class="afflictions mt-4 card border-primary">
         <h5 class="card-header">Afflictions</h5>
         <ul class="list-group item-list">
@@ -47,6 +146,7 @@
 
 </div>
 
+<<<<<<< Updated upstream
 <div class="bs-doc-section mt-5">
     <h3>Recommendations</h3>
     <div class="accordion accordion-flush" id="accordionExample">
@@ -235,12 +335,103 @@
   </tbody>
 </table>
 </div>
+=======
+<!-- Recommendations Accordion -->
+{% if client.nutritionist_id %}
+    <div class="bs-doc-section mt-5">
+        <h3>Recommendations</h3>
+        <div class="accordion accordion-flush" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                <h5>General</h5>
+              </button>
+            </h2>
+
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+              <div class="accordion-body">
+                <ul class="list-group" id="item-list">
+                  <!-- List items -->
+                  {% for recommendation in recommendations %}
+                    {% if recommendation.rec_category == "general" %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ recommendation.content }}
+                        {% if current_user.account_type == 'nutritionist' %}
+                        <button class="btn btn-danger delete-btn" type="button" data-entry-type="recommendation" data-entry-id="{{ recommendation.id }}">-</button>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <h5>Practical</h5>
+              </button>
+            </h2>
+
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
+              <div class="accordion-body">
+                <ul class="list-group" id="item-list">
+                  <!-- List items -->
+                  {% for recommendation in recommendations %}
+                    {% if recommendation.rec_category == "practical" %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ recommendation.content }}
+                        {% if current_user.account_type == 'nutritionist' %}
+                        <button class="btn btn-danger delete-btn" type="button" data-entry-type="recommendation" data-entry-id="{{ recommendation.id }}"">-</button>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <h5>Physical Activity</h5>
+              </button>
+            </h2>
+
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <ul class="list-group" id="item-list">
+                  <!-- List items -->
+                  {% for recommendation in recommendations %}
+                    {% if recommendation.rec_category == "physical" %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ recommendation.content }}
+                        {% if current_user.account_type == 'nutritionist' %}
+                        <button class="btn btn-danger delete-btn" type="button" data-entry-type="recommendation" data-entry-id="{{ recommendation.id }}"">-</button>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+{% endif %}
+>>>>>>> Stashed changes
 
 {% if current_user.account_type == 'nutritionist' %}
  <a href="{{ url_for('views.client_list') }}" class="btn btn-primary mt-3">Return to Client List</a>
 {% endif %}
+<<<<<<< Updated upstream
 </div>
 
+=======
+>>>>>>> Stashed changes
 
 {% endblock %}
 

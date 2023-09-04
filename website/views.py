@@ -1,22 +1,37 @@
 from click import DateTime
+<<<<<<< Updated upstream
 from flask import Blueprint, Request, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from .models import User, Nutritionist, Client, Notification, Recipe, Ingredient, Education, RelatedInterests, Experience, Afflictions, Medication, AllergiesIntolerances, Recommendation
+=======
+from flask import Blueprint, Request, render_template, request, flash, redirect, url_for, jsonify
+from flask_login import login_required, current_user
+from .models import User, Nutritionist, Client, Notification, Recipe, Ingredient, Education, RelatedInterests, Experience, Afflictions, Medication, AllergiesIntolerances, Recommendation, RecipeIngredients , MyPlan, RecommendedRecipe, ClientWeight
+>>>>>>> Stashed changes
 from . import db
 import os
+import json
 from werkzeug.utils import secure_filename
+<<<<<<< Updated upstream
 from datetime import datetime
+=======
+from datetime import datetime, date 
+>>>>>>> Stashed changes
 
 views = Blueprint('views', __name__)
 
 UPLOAD_FOLDER = 'website/static/profile_pictures/'
+RECIPE_UPLOAD_FOLDER = 'website/static/recipe_pictures/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+<<<<<<< Updated upstream
 @views.route('/')
 def home():
     return render_template("home.html", user=current_user)
 
 
+=======
+>>>>>>> Stashed changes
 @views.route('/client-profile', methods=['GET', 'POST'])
 @login_required
 def client_profile():
@@ -26,6 +41,13 @@ def client_profile():
     medications = Medication.query.filter_by(client_id=client.id).all();
     allergies = AllergiesIntolerances.query.filter_by(client_id=client.id).all();
     recommendations = Recommendation.query.filter_by(client_id=client.id).all();
+<<<<<<< Updated upstream
+=======
+    weights = ClientWeight.query.filter_by(client_id=client.id).all();
+    meal_history = MyPlan.query.filter_by(client_id=client.id).all();
+    meal_history.sort(key=lambda meal: meal.meal_date)
+    meal_history.reverse()
+>>>>>>> Stashed changes
 
     if request.method == 'POST' and 'height' in request.form:
         if 'profile_picture' in request.files:
@@ -45,6 +67,11 @@ def client_profile():
         weight = request.form.get('weight')
         if weight:
             client.weight = float(weight)
+            current_weight = float(weight)
+            weight_date = date.today()
+            weight_entry = ClientWeight(client_id=client.id, recorded_weight=current_weight, weight_date=weight_date)
+
+            db.session.add(weight_entry)
 
         if client.height and client.weight:
             bmi = round(client.weight/((client.height/100)**2), 2)
@@ -99,10 +126,15 @@ def client_profile():
     today = datetime.now().date()
     age = None
     age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+<<<<<<< Updated upstream
 
 
     return render_template('client_profile.html', user=client, client=client, client_id=current_user.id, profile_picture=url_for('static', filename='profile_pictures/' + client.profile_picture), age=age, afflictions=afflictions, medications=medications, allergies=allergies, recommendations=recommendations)
+=======
+>>>>>>> Stashed changes
 
+
+    return render_template('client_profile.html', user=client, client=client, client_id=current_user.id, profile_picture=url_for('static', filename='profile_pictures/' + client.profile_picture), age=age, weights=weights, meal_history=meal_history, afflictions=afflictions, medications=medications, allergies=allergies, recommendations=recommendations)
 
 @views.route('/my-plan', methods=['GET', 'POST'])
 @login_required
@@ -112,6 +144,29 @@ def my_plan():
     experience_entries = Experience.query.all()
     education_entries = Education.query.all()
     interest_entries = RelatedInterests.query.all()
+<<<<<<< Updated upstream
+=======
+    recipes = Recipe.query.all()
+    ingredients = Ingredient.query.all()
+    recipe_ingredients = RecipeIngredients.query.all()
+    my_plan_recipes = MyPlan.query.all()
+
+    recipes_json = json.dumps([{
+        'id': recipe.id,
+        'title': recipe.title,
+        'description': recipe.description,
+        'recipe_picture': recipe.recipe_picture,
+    } for recipe in recipes])
+
+    my_plan_recipes_json = json.dumps([{
+        'client_id': current_user.id,
+        'recipe_id': recipe.recipe_id,
+        'meal_date': recipe.meal_date.strftime('%Y-%m-%d'),  # Convert date to string
+        'meal_name': recipe.meal_name,
+    } for recipe in my_plan_recipes])
+
+    current_user_id_json = jsonify(current_user_id=current_user.id)
+>>>>>>> Stashed changes
 
     if client.nutritionist_id:
         nutritionist = Nutritionist.query.get(client.nutritionist_id)
@@ -119,15 +174,52 @@ def my_plan():
         education_entries = Education.query.filter_by(nutritionist_id=nutritionist.id).all()
         interest_entries = RelatedInterests.query.filter_by(nutritionist_id=nutritionist.id).all()
 
+<<<<<<< Updated upstream
         return render_template("my_plan.html", user=current_user, nutritionist=nutritionist, experience_entries=experience_entries, education_entries=education_entries, interest_entries=interest_entries)
     return render_template("my_plan.html", user=current_user, nutritionists=nutritionists, experience_entries=experience_entries, education_entries=education_entries, interest_entries=interest_entries)
+=======
+        return render_template("my_plan.html", user=current_user, nutritionist=nutritionist, experience_entries=experience_entries, education_entries=education_entries, interest_entries=interest_entries, recipes=recipes, ingredients=ingredients, recipe_ingredients=recipe_ingredients, recipes_json=recipes_json, my_plan_recipes=my_plan_recipes, my_plan_recipes_json=my_plan_recipes_json)
+    return render_template("my_plan.html", user=current_user, nutritionists=nutritionists, experience_entries=experience_entries, education_entries=education_entries, interest_entries=interest_entries, recipes=recipes, ingredients=ingredients, recipe_ingredients=recipe_ingredients, recipes_json=recipes_json, my_plan_recipes=my_plan_recipes, my_plan_recipes_json=my_plan_recipes_json)
+>>>>>>> Stashed changes
 
 @views.route('/recipes', methods=['GET', 'POST'])
 @login_required
 def recipes():
-    recipe_list = Recipe.query.all()
-    return render_template("recipes.html", user=current_user, recipe_list=recipe_list)
+    user = User.query.filter_by(id=current_user.id).first()
+    recipes = Recipe.query.all()
+    ingredients = Ingredient.query.all()
+    recipe_ingredients = RecipeIngredients.query.all()
 
+<<<<<<< Updated upstream
+=======
+    breakfast_recipes = Recipe.query.filter_by(recipe_type="breakfast")
+    main_recipes = Recipe.query.filter_by(recipe_type="main")
+    snack_recipes = Recipe.query.filter_by(recipe_type="snack")
+   
+    if user.account_type == 'nutritionist':
+        clients = user.clients
+
+        if request.method == 'POST':
+            recipe_id = request.form.get('recipe_id')
+            client_id = request.form.get('client_id')
+
+            # Create a new entry in the RecommendedRecipe table.
+            recommended_recipe = RecommendedRecipe(client_id=client_id, recipe_id=recipe_id)
+            db.session.add(recommended_recipe)
+            db.session.commit()
+
+            flash('Recipe recommended!', 'success')
+            return redirect(url_for('views.recipes'))
+
+        return render_template("recipes.html", user=current_user, clients=clients, recipes=recipes, breakfast_recipes=breakfast_recipes, main_recipes=main_recipes, snack_recipes=snack_recipes, ingredients=ingredients, recipe_ingredients=recipe_ingredients)
+    
+    else:
+        recommended_recipes = RecommendedRecipe.query.filter_by(client_id=current_user.id).all()
+        return render_template("recipes.html", user=current_user, recipes=recipes, breakfast_recipes=breakfast_recipes, main_recipes=main_recipes, snack_recipes=snack_recipes, ingredients=ingredients, recipe_ingredients=recipe_ingredients, recommended_recipes=recommended_recipes)
+
+    return render_template("recipes.html", user=current_user, recipes=recipes, ingredients=ingredients, recipe_ingredients=recipe_ingredients)
+
+>>>>>>> Stashed changes
 @views.route('/client-list', methods=['GET', 'POST'])
 @login_required
 def client_list():
@@ -144,6 +236,13 @@ def client_record(client_id):
     medications = Medication.query.filter_by(client_id=client.id).all();
     allergies = AllergiesIntolerances.query.filter_by(client_id=client.id).all();
     recommendations = Recommendation.query.filter_by(client_id=client.id).all();
+<<<<<<< Updated upstream
+=======
+    weights = ClientWeight.query.filter_by(client_id=client.id).all();
+    meal_history = MyPlan.query.filter_by(client_id=client.id).all();
+    meal_history.sort(key=lambda meal: meal.meal_date)
+    meal_history.reverse()
+>>>>>>> Stashed changes
 
     today = datetime.now().date()
     client_age = None
@@ -176,7 +275,26 @@ def client_record(client_id):
             flash('Recommendation added successfully!', 'success')
             return redirect(url_for('views.client_record', client_id=client.id))
 
+<<<<<<< Updated upstream
     return render_template("client_record.html", nutritionist=user, client=client, client_age=client_age, afflictions=afflictions, medications=medications, allergies=allergies, recommendations=recommendations)
+=======
+    if request.method == 'POST' and 'breakfast-input' in request.form:
+        breakfast_calories = request.form.get('breakfast-input')
+        lunch_calories = request.form.get('lunch-input')
+        dinner_calories = request.form.get('dinner-input')
+        snack_calories = request.form.get('snack-input')
+
+        client.breakfast_calories = breakfast_calories
+        client.lunch_calories = lunch_calories
+        client.dinner_calories = dinner_calories
+        client.snack_calories = snack_calories
+
+        db.session.commit()
+        flash('Meal plan updated successfully!', category='success')
+        return redirect(url_for('views.client_record', client_id=client.id))
+
+    return render_template("client_record.html", nutritionist=user, client=client, client_age=client_age, weights=weights, meal_history=meal_history, afflictions=afflictions, medications=medications, allergies=allergies, recommendations=recommendations)
+>>>>>>> Stashed changes
    
 @views.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
@@ -193,11 +311,14 @@ def meal_plan():
 @views.route('/nutritionist-profile', methods=['GET', 'POST'])
 @login_required
 def nutritionist_profile():
-    #recipe_list = []
     nutritionist = Nutritionist.query.get(current_user.id)
     experience_entries = Experience.query.filter_by(nutritionist_id=nutritionist.id).all()
     education_entries = Education.query.filter_by(nutritionist_id=nutritionist.id).all()
     interest_entries = RelatedInterests.query.filter_by(nutritionist_id=nutritionist.id).all()
+<<<<<<< Updated upstream
+=======
+    ingredients = Ingredient.query.all()
+>>>>>>> Stashed changes
 
     if request.method == 'POST':
         if 'profile_picture' in request.files:
@@ -231,6 +352,7 @@ def nutritionist_profile():
             if phone_number:
                 nutritionist.phone_number = phone_number
 
+<<<<<<< Updated upstream
             description = request.form.get('description')
             if description:
                 nutritionist.description = description
@@ -243,33 +365,16 @@ def nutritionist_profile():
         elif request.method == 'POST' and 'recipe-type' in request.form:
             title = request.form.get('title')
             recipe_type = request.form.get('recipe_type')
+=======
+>>>>>>> Stashed changes
             description = request.form.get('description')
-    
-            # Retrieve and validate ingredient fields
-            ingredients = {}
-            ingredient_counter = 1
-            while f'ingredient-{ingredient_counter}' in request.form:
-                ingredient_name = request.form.get(f'ingredient-{ingredient_counter}')
-                amount = request.form.get(f'amount-{ingredient_counter}')
+            if description:
+                nutritionist.description = description
 
-                # Check if ingredient already exists in the database
-                existing_ingredient = Ingredient.query.filter_by(name=ingredient_name).first()
-                if existing_ingredient:
-                    ingredients[existing_ingredient] = amount
-                else:
-                    new_ingredient = Ingredient(name=ingredient_name)
-                    db.session.add(new_ingredient)
-                    db.session.commit()
-                    ingredients[new_ingredient] = amount
-        
-                ingredient_counter += 1
-    
-            new_recipe = Recipe(title=title, recipe_type=recipe_type,ingredients=ingredients, description=description)
-    
-            db.session.add(new_recipe)
+
             db.session.commit()
-            flash('Recipe added!', category='success')
-            return redirect(url_for('views.recipes'))
+            flash('Profile updated successfully!', category='success')
+            return redirect(url_for('views.nutritionist_profile'))
 
         elif request.method == 'POST' and 'job' in request.form:
             job = request.form.get('job')
@@ -277,6 +382,7 @@ def nutritionist_profile():
             job_description = request.form.get('job-description')
             job_start_year = int(request.form.get('job-start-year'))
             job_end_year = int(request.form.get('job-end-year'))
+<<<<<<< Updated upstream
 
             if nutritionist:
                  new_experience = Experience(
@@ -333,12 +439,137 @@ def nutritionist_profile():
     #recipe_list.append(current_recipe)
 
     return render_template('nutritionist_profile.html', user=nutritionist, profile_picture=url_for('static', filename='profile_pictures/' + nutritionist.profile_picture), experience_entries=experience_entries, education_entries=education_entries, interest_entries=interest_entries)
+=======
+
+            if nutritionist:
+                 new_experience = Experience(
+                                  nutritionist_id=nutritionist.id,
+                                  job=job,
+                                  company=company,
+                                  job_description=job_description,
+                                  job_start_year=job_start_year,
+                                  job_end_year=job_end_year
+                                  )
+                 db.session.add(new_experience)
+                 db.session.commit()
+                 flash('Experience entry added successfully!', 'success')
+                 return redirect(url_for('views.nutritionist_profile'))
+>>>>>>> Stashed changes
+
+        elif request.method == 'POST' and 'school' in request.form:
+            school = request.form.get('school')
+            degree = request.form.get('degree')
+            field_of_study = request.form.get('field-of-study')
+            education_start_year = int(request.form.get('education-start-year'))
+            education_end_year = int(request.form.get('education-end-year'))
+
+<<<<<<< Updated upstream
+=======
+            if nutritionist:
+                 new_education = Education(
+                                  nutritionist_id=nutritionist.id,
+                                  school=school,
+                                  degree=degree,
+                                  field_of_study=field_of_study,
+                                  education_start_year=education_start_year,
+                                  education_end_year=education_end_year
+                                  )
+                 db.session.add(new_education)
+                 db.session.commit()
+                 flash('Education entry added successfully!', 'success')
+                 return redirect(url_for('views.nutritionist_profile'))
+
+        elif request.method == 'POST' and 'interest' in request.form:
+            interest = request.form.get('interest')
+            interest_description = request.form.get('interest-description')
+
+            if nutritionist:
+                 new_interest = RelatedInterests(
+                                  nutritionist_id=nutritionist.id,
+                                  interest=interest,
+                                  interest_description=interest_description
+                                  )
+
+                 db.session.add(new_interest)
+                 db.session.commit()
+                 flash('Interest entry added successfully!', 'success')
+                 return redirect(url_for('views.nutritionist_profile'))
+
+        elif request.method == 'POST' and 'recipe-type' in request.form:
+            title = request.form.get('title')
+            recipe_type = request.form.get('recipe-type')
+            description = request.form.get('description')
+        
+            ingredient_names = request.form.getlist('ingredient[]')
+            ingredient_amounts = request.form.getlist('amount[]')
+            ingredient_measurements = request.form.getlist('measurement[]')
+
+            ingr_names = ingredient_names
+            ingr_amounts = ingredient_amounts
+            ingr_measurements = ingredient_measurements
+
+            ingredient_data = list(zip(ingredient_names, ingredient_amounts, ingredient_measurements))
+
+            total_recipe_calories = 0
+            total_recipe_proteins = 0
+            total_recipe_carbs = 0
+            total_recipe_fats = 0
+
+            for index, name in enumerate(ingr_names):
+                amount = ingr_amounts[index]
+                measurement = ingr_measurements[index]
+
+                if measurement == "kg" or measurement == "l":
+                    amount = amount * 1000
+                elif measurement == "tbsp":
+                    amount = amount * 14;
+                elif measurement == "tsp":
+                    amount = amount * 6;
+
+                amount = float(amount)
+
+                ingredient = Ingredient.query.filter_by(name=name).first()
+
+                calories = float(ingredient.calories)
+                proteins = float(ingredient.proteins)
+                carbs = float(ingredient.carbs)
+                fats = float(ingredient.fats)
+
+                total_ingr_calories = (amount * calories) / 100
+                total_ingr_proteins = (amount * proteins) / 100
+                total_ingr_carbs = (amount * carbs) / 100
+                total_ingr_fats = (amount * fats) / 100
+
+                total_recipe_calories += total_ingr_calories
+                total_recipe_proteins += total_ingr_proteins
+                total_recipe_carbs += total_ingr_carbs
+                total_recipe_fats += total_ingr_fats
+
+            total_recipe_calories = "{:.2f}".format(total_recipe_calories)
+            total_recipe_proteins = "{:.2f}".format(total_recipe_proteins / 1000)
+            total_recipe_carbs = "{:.2f}".format(total_recipe_carbs / 1000)
+            total_recipe_fats = "{:.2f}".format(total_recipe_fats / 1000)
+
+            recipe_picture = request.files['recipe-picture'] if 'recipe-picture' in request.files else None
+
+            add_recipe_to_db(title, recipe_type, description, total_recipe_calories, total_recipe_proteins, total_recipe_carbs, total_recipe_fats, ingredient_data, recipe_picture)
+        
+            flash('Recipe added successfully!', category='success')
+            return redirect(url_for('views.nutritionist_profile'))  # Redirect back to the profile page
+
+    return render_template('nutritionist_profile.html', user=nutritionist, profile_picture=url_for('static', filename='profile_pictures/' + nutritionist.profile_picture), experience_entries=experience_entries, education_entries=education_entries, interest_entries=interest_entries, ingredients=ingredients)
 
 
+>>>>>>> Stashed changes
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+<<<<<<< Updated upstream
+=======
+
+# NOTIFICATION SECTION
+>>>>>>> Stashed changes
 @views.route('/send-request/<int:nutritionist_id>', methods=['POST'])
 def send_request(nutritionist_id):
    nutritionist = Nutritionist.query.get(nutritionist_id)
@@ -358,7 +589,10 @@ def send_request(nutritionist_id):
 
    return redirect(url_for('views.my_plan'))
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 def send_notification(nutritionist_id):
     nutritionist = Nutritionist.query.get(nutritionist_id)
     if nutritionist:
@@ -421,6 +655,11 @@ def send_notification_to_client(client_id, message):
     db.session.commit()
 
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 @views.route('/delete-affliction/<int:affliction_id>', methods=['POST'])
 @login_required
 def delete_affliction(affliction_id):
@@ -475,4 +714,148 @@ def delete_recommendation(client_id, recommendation_id):
     else:
         flash('Recommendation not found.', 'error')
 
+<<<<<<< Updated upstream
     return redirect(url_for('views.client_record', client_id=client_id))
+=======
+    return redirect(url_for('views.client_record', client_id=client_id))
+
+@views.route('/delete-experience/<int:entry_id>', methods=['POST'])
+@login_required
+def delete_experience(entry_id):
+    experience = Experience.query.get(entry_id)
+    
+    if experience:
+        db.session.delete(experience)
+        db.session.commit()
+        flash('Entry deleted successfully!', 'success')
+    else:
+        flash('Entry not found.', 'error')
+
+    return redirect(url_for('views.nutritionist_profile'))
+
+@views.route('/delete-education/<int:entry_id>', methods=['POST'])
+@login_required
+def delete_education(entry_id):
+    education = Education.query.get(entry_id)
+    
+    if education:
+        db.session.delete(education)
+        db.session.commit()
+        flash('Entry deleted successfully!', 'success')
+    else:
+        flash('Entry not found.', 'error')
+
+    return redirect(url_for('views.nutritionist_profile'))
+
+@views.route('/delete-interest/<int:entry_id>', methods=['POST'])
+@login_required
+def delete_interest(entry_id):
+    interest = RelatedInterests.query.get(entry_id)
+    
+    if interest:
+        db.session.delete(interest)
+        db.session.commit()
+        flash('Entry deleted successfully!', 'success')
+    else:
+        flash('Entry not found.', 'error')
+
+    return redirect(url_for('views.nutritionist_profile'))
+
+
+
+# RECIPE SECTION
+
+# Ingredient auto-complete
+@views.route('/get_ingredients')
+def get_ingredients():
+    query = request.args.get('query', '')
+
+    ingredients = Ingredient.query.filter(Ingredient.name.startswith(query)).limit(20).all()
+
+    suggestions = [ingredient.name for ingredient in ingredients]
+    return jsonify({'ingredients': suggestions})
+
+# Add recipe to the database
+def add_recipe_to_db(title, recipe_type, description, total_recipe_calories, total_recipe_proteins, total_recipe_carbs, total_recipe_fats, ingredient_data, picture=None):
+    # Create a new Recipe object and populate its attributes
+    new_recipe = Recipe(
+        title=title,
+        recipe_type=recipe_type,
+        description=description,
+        total_calories=total_recipe_calories,
+        total_proteins=total_recipe_proteins, 
+        total_carbs=total_recipe_carbs,
+        total_fats=total_recipe_fats,
+    )
+
+    if picture:
+        if allowed_file(picture.filename):
+            filename = secure_filename(picture.filename)
+            picture_path = os.path.join(RECIPE_UPLOAD_FOLDER, filename)
+            picture.save(picture_path)
+            new_recipe.recipe_picture = filename
+        else:
+            flash('Invalid file format. Allowed formats are png, jpg, jpeg, gif', category='error')
+            return  # Stop processing if the picture is not valid
+
+    # Add the new recipe to the database
+    db.session.add(new_recipe)
+    db.session.commit()
+
+    # Loop through the ingredient data and add to the RecipeIngredients table
+    for name, amount, measurement in ingredient_data:
+        ingredient = Ingredient.query.filter_by(name=name).first()
+        if not ingredient:
+            flash(f"Ingredient '{name}' is not available in the database.", category='error')
+            return  # Stop processing if the ingredient doesn't exist in the database
+
+        recipe_ingredient = RecipeIngredients(
+            recipe_id=new_recipe.id,
+            ingredient_id=ingredient.id,
+            ingredient_name=ingredient.name,
+            amount=float(amount),
+            measurement=measurement
+        )
+        db.session.add(recipe_ingredient)
+
+
+
+    db.session.commit()
+    return redirect(url_for('views.nutritionist_profile'))
+
+# Add recipe to My Plan
+@views.route('/save_to_myplan', methods=['POST'])
+def save_to_myplan():
+    if request.method == 'POST':
+
+        recipe_id = int(request.form['recipe_id'])
+        meal_date = request.form.get('meal-date')
+        date = datetime.strptime(meal_date, '%Y-%m-%d').date()
+        meal_name = request.form.get('meal-type')
+        client_id = current_user.id  # Replace with how you get the current user's ID
+
+        # Create a new MyPlan entry and save it to the database
+        my_plan_entry = MyPlan(client_id=client_id,
+                              recipe_id=recipe_id, 
+                              meal_date=date,
+                             meal_name=meal_name)
+        db.session.add(my_plan_entry)
+        db.session.commit()
+
+        flash('Recipe added to My Plan successfully!', 'success')
+        return redirect(url_for('views.recipes'))
+
+# MY PLAN SECTION
+# Remove recipes from My Plan
+@views.route('/delete_myplan_entry/<int:entry_id>', methods=['POST'])
+def delete_myplan_entry(entry_id):
+    entry_to_delete = MyPlan.query.get(entry_id)
+    if entry_to_delete:
+        db.session.delete(entry_to_delete)
+        db.session.commit()
+        flash('Entry deleted successfully', 'success')
+    else:
+        flash('Entry not found', 'error')
+    
+    return redirect(url_for('views.my_plan'))
+>>>>>>> Stashed changes

@@ -10,13 +10,21 @@
     <div class="notification mt-4"> 
       {% for notification in user.notifications %}
         {% if notification.status == 'pending' %}
+<<<<<<< Updated upstream
           <div class="card text-white bg-info mt-4 ">
+=======
+          <div class="card text-white bg-primary mt-4 ">
+>>>>>>> Stashed changes
             <div class="card-body">
               <h5 class="card-title">Registry request from {{ notification.client.first_name }} {{ notification.client.last_name }}</h5>
             </div>
             <div class="card-footer d-flex justify-content-end">
                 <form action="{{ url_for('views.accept_request', notification_id=notification.id) }}" method="POST" class="d-inline-block me-2">
+<<<<<<< Updated upstream
                   <button type="submit" class="btn btn-success">Accept</button>
+=======
+                  <button type="submit" class="btn btn-light">Accept</button>
+>>>>>>> Stashed changes
                 </form>
                 <form action="{{ url_for('views.decline_request', notification_id=notification.id) }}" method="POST" class="d-inline-block">
                   <button type="submit" class="btn btn-danger">Decline</button>

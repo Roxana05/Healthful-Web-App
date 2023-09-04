@@ -5,6 +5,7 @@
 
 
 <div class="container p-5">
+<<<<<<< Updated upstream
 
 <!-- Nutritionist Information and History -->
 <div class="nutritionist-data">
@@ -104,12 +105,119 @@
             {% endfor %}
         </div>
 
+=======
+
+<!-- Nutritionist Information and History -->
+<div class="nutritionist-data">
+    <div class="profile-info">
+        <div class="row">
+          <div class="col-md-4">
+              <!-- Display the client's profile picture -->
+              <div class="profile-picture-container">
+                <img src="{{ profile_picture }}" class="profile-picture" alt="Profile Picture">
+              </div>
+
+            
+
+          </div>
+   
+          <div class="col-md-8">
+              <!-- Display the nutritionist's information -->
+              <h2> {{ user.first_name }} {{ user.last_name }}</h2>
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>Phone Number:</strong> {{ user.phone_number }} </p>
+              <p><strong>Address:</strong> {{ user.address }}, {{ user.city }}, {{ user.country }} </p>
+              <p><strong>Description:</strong><br> {{ user.description }} </p>
+
+              <button id="edit_profile_btn" class="btn btn-primary">Update Profile</button>
+
+          </div>
+          <!-- Form to update profile information-->
+              <form method="POST" enctype="multipart/form-data" style="display: none;" id="pfp">
+                  <br><br>
+                <!-- Profile picture -->
+                <div class="form-group col-md-4">
+                  <label for="profile_picture">Profile Picture:</label>
+                  <input type="file" class="form-control-file form-control" id="profile_picture" name="profile_picture">
+                  <button type="submit" class="btn btn-success mt-1">Save</button><br><br>
+                </div>
+              </form>
+              <br>
+
+
+              <form method="POST" id="profile_info" style="display: none;" class="col-md-4">
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                  <label for="phone_number">Phone Number:</label>
+                  <input type="text" class="form-control" id="phone_number" name="phone_number">
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                  <label for="address">Address:</label>
+                  <input type="text" class="form-control" id="address" name="address">
+                </div>
+
+                <!-- City -->
+                <div class="form-group">
+                  <label for="city">City:</label>
+                  <input type="text" class="form-control" id="city" name="city">
+                </div>
+
+                <!-- Country -->
+                <div class="form-group">
+                  <label for="country">Country:</label>
+                  <input type="text" class="form-control" id="country" name="country">
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                  <label for="description">Description:</label>
+                  <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+
+                <br>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary">Update</button>
+              </form>
+    </div>
+    <br><br>
+
+    <div class="card experience-card border-primary mb-3">
+
+        <div class="card-header">
+            <h4>Experience
+            <i class="fa-solid fa-plus add-button" style="float:right;" data-bs-toggle="modal" data-bs-target="#add-experience-modal"></i>
+            </h4>
+        </div>
+
+        <div class="card-body p-4">
+            {% for entry in experience_entries %}
+              <div class="experience-entry row">
+                <div class="col">
+                    <h5>{{ entry.job }}</h5>
+                    <p style="margin-bottom: 0.1rem;">At <strong>{{ entry.company }}</strong></p>
+                    <p style="margin-bottom: 0.1rem;">{{ entry.job_description }}</p>
+                    <p class="small">{{ entry.job_start_year }} - {{ entry.job_end_year }}</p>
+                </div>
+                <div class="col d-flex justify-content-end m-3 p-0">
+                    <button type="button" class="btn delete-btn btn-secondary mt-5" data-entry-type="experience" data-entry-id="{{ entry.id }}">Delete</button>
+                </div>
+                <hr>
+              </div>
+            {% endfor %}
+        </div>
+
+>>>>>>> Stashed changes
     </div>
 
 
     <div class="card education-card border-primary mb-3">
 
         <div class="card-header">
+<<<<<<< Updated upstream
             <h5>Education
             <i class="fa-solid fa-plus add-button" style="float:right;" data-toggle="modal" data-target="#add-education-modal"></i>
             </h5>
@@ -121,6 +229,24 @@
                 <h5>{{ entry.degree }} in {{ entry.field_of_study }}</h5>
                 <p style="margin-bottom: 0.1rem;">{{ entry.school }}</p>
                 <p class="small">{{ entry.education_start_year }} - {{ entry.education_end_year }}</p>
+=======
+            <h4>Education
+            <i class="fa-solid fa-plus add-button" style="float:right;" data-bs-toggle="modal" data-bs-target="#add-education-modal"></i>
+            </h4>
+        </div>
+
+        <div class="card-body p-4">
+            {% for entry in education_entries %}
+              <div class="education-entry row">
+                <div class="col">
+                    <h5>{{ entry.degree }} in {{ entry.field_of_study }}</h5>
+                    <p style="margin-bottom: 0.1rem;">At <strong>{{ entry.school }}</strong></p>
+                    <p class="small">{{ entry.education_start_year }} - {{ entry.education_end_year }}</p>
+                </div>
+                <div class="col d-flex justify-content-end mr-3 p-0">
+                    <button type="button" class="btn delete-btn btn-secondary m-3 mt-5" data-entry-type="education" data-entry-id="{{ entry.id }}">Delete</button>
+                </div>
+>>>>>>> Stashed changes
                 <hr>
               </div>
             {% endfor %}
@@ -131,6 +257,7 @@
     <div class="card interests-card border-primary mb-3">
 
         <div class="card-header">
+<<<<<<< Updated upstream
             <h5>Related Interests
             <i class="fa-solid fa-plus add-button" type="button" style="float:right;" data-toggle="modal" data-target="#add-related-modal"></i>
             </h5>
@@ -141,6 +268,23 @@
               <div class="interest-entry">
                 <h5>{{ entry.interest }}</h5>
                 <p>{{ entry.interest_description }}</p>
+=======
+            <h4>Related Interests
+            <i class="fa-solid fa-plus add-button" type="button" style="float:right;" data-bs-toggle="modal" data-bs-target="#add-related-modal"></i>
+            </h4>
+        </div>
+
+        <div class="card-body p-4">
+            {% for entry in interest_entries %}
+              <div class="interest-entry row">
+                <div class="col">
+                    <h5>{{ entry.interest }}</h5>
+                    <p>{{ entry.interest_description }}</p>
+                </div>
+                <div class="col d-flex justify-content-end m-3 mt-4 p-0">
+                    <button type="button" class="btn delete-btn btn-secondary" data-entry-type="interest" data-entry-id="{{ entry.id }}">Delete</button>
+                </div>
+>>>>>>> Stashed changes
                 <hr>
               </div>
             {% endfor %}
@@ -153,7 +297,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="add-section-modal-label">Add Experience</h5>
+<<<<<<< Updated upstream
             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+=======
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+>>>>>>> Stashed changes
               <span aria-hidden="true"></span>
             </button>
           </div>
@@ -200,7 +348,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="add-section-modal-label">Add Education</h5>
+<<<<<<< Updated upstream
             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+=======
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+>>>>>>> Stashed changes
               <span aria-hidden="true"></span>
             </button>
           </div>
@@ -246,7 +398,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="add-section-modal-label">Add Related Interest</h5>
+<<<<<<< Updated upstream
             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+=======
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+>>>>>>> Stashed changes
               <span aria-hidden="true"></span>
             </button>
           </div>
@@ -273,12 +429,21 @@
 </div>
 
 <!-- Add recipes option -->
+<<<<<<< Updated upstream
  <button class="btn btn-primary" id="add-recipe-btn" onclick="toggleRecipeForm()">Add Recipe</button>
 
 <div id="recipe-form" style="display: none;">
       <form method="POST" action="{{ url_for('views.nutritionist_profile') }}">
 
         <div class="form-group">
+=======
+ <button class="btn btn-primary btn-lg mt-3" id="add-recipe-btn" onclick="toggleRecipeForm()">Add Recipe</button>
+
+<div id="recipe-form" class="col-md-4" style="display: none;">
+      <form method="POST" enctype="multipart/form-data">
+
+        <div class="form-group mt-2">
+>>>>>>> Stashed changes
             <label for="title">Title:</label>
             <input type="text" 
                 class="form-control" 
@@ -288,16 +453,25 @@
             />
         </div>
 
+<<<<<<< Updated upstream
         <div class="form-group">
             <label for="title">Type:</label>
             <select class="form-control" name="recipe_type" required>
               <option value="breakfast">Breakfast</option>
               <option value="lunch">Lunch</option>
               <option value="dinner">Dinner</option>
+=======
+        <div class="form-group mt-2">
+            <label for="title">Type:</label>
+            <select class="form-control" name="recipe-type" required>
+              <option value="breakfast">Breakfast</option>
+              <option value="main">Main Meal</option>
+>>>>>>> Stashed changes
               <option value="snack">Snack</option>
             </select>
         </div>
     
+<<<<<<< Updated upstream
         <div class="form-group">
            <label for="ingredients">Ingredients</label>
            <div id="ingredient-fields">
@@ -316,10 +490,32 @@
                             class="form-control" 
                             id="amount-1" 
                             name="amount-1" 
+=======
+        <div class="form-group mt-2">
+           <label for="ingredient-0">Ingredients:</label>
+           <div id="ingredient-fields">
+               <div class="form-group row">
+                   <div class="col-md-6" style="padding-right: 0;">
+                        <input type="text" 
+                            class="form-control ingredient"  
+                            name="ingredient[]" 
+                            id="ingredient-0"
+                            placeholder="Ingredient"
+                            required
+                            list="ingredient-suggestions"
+                        />
+                        <datalist id="ingredient-suggestions"></datalist>
+                    </div>
+                    <div class="col-md-3" style="padding-right: 0;">
+                        <input type="text" 
+                            class="form-control amount" 
+                            name="amount[]" 
+>>>>>>> Stashed changes
                             placeholder="Amount"
                             required
                         />
                     </div>
+<<<<<<< Updated upstream
                     <div class="form-group col-md-2">
                         <select class="form-control"
                                 name="measurement-1"
@@ -333,6 +529,19 @@
                             <option value="piece">pcs</option>
                             <option value="pinch">pinch</option>
                             <option></option>
+=======
+                    <div class="form-group col-md-3">
+                        <select class="form-control measurement"
+                                name="measurement[]">
+                            <option value="gr">gr</option>
+                            <option value="kg">kg</option>
+                            <option value="ml">ml</option>
+                            <option value="l">l</option>
+                            <option value="tsp">tsp</option>
+                            <option value="tbsp">tbsp</option>
+                            <option value="pcs">pcs</option>
+                            <option value="pinch">pinch</option>
+>>>>>>> Stashed changes
                         </select>
                         
                     </div>
@@ -341,17 +550,36 @@
             <button type="button" class="btn btn-outline-secondary mt-2 btn-sm" id="add-ingredient">Add Ingredient</button>
         </div>
 
+<<<<<<< Updated upstream
         <div class="form-group">
+=======
+        <div class="form-group mt-2">
+>>>>>>> Stashed changes
             <label for="description">Recipe Description:</label>
             <textarea class="form-control" id="description" name="description" required></textarea>
         </div>
 
+<<<<<<< Updated upstream
         <button type="submit" class="btn btn-outline-primary btn-sm">Add Recipe</button>
+=======
+        <div class="form-group mt-2">
+            <label for="profile_picture">Recipe Picture:</label>
+            <input type="file" class="form-control-file form-control" id="recipe-picture" name="recipe-picture">
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary mt-3">Add Recipe</button>
+>>>>>>> Stashed changes
       </form>  
 </div>
 
 </div>
+<<<<<<< Updated upstream
 {% endblock %}
 
 
     <script src="{{ url_for('static', filename='add_recipe.js') }}"></script>
+=======
+
+<script src="static/javascript/nutritionist_profile.js"></script>
+{% endblock %}
+>>>>>>> Stashed changes

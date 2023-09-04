@@ -1,8 +1,13 @@
 from tkinter import Text
 from . import db 
 from flask_login import UserMixin 
+<<<<<<< Updated upstream
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text, PickleType, Date
+=======
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text, PickleType, Date, UniqueConstraint
+>>>>>>> Stashed changes
 from sqlalchemy.orm import relationship
+from datetime import date
 
 class User(db.Model, UserMixin):                                
     id = Column(Integer, primary_key=True)
@@ -37,7 +42,18 @@ class Client(User):
     desired_weight = Column(Float, nullable=True)
     desired_date = Column(Date)
 
+<<<<<<< Updated upstream
     notifications = relationship('Notification', back_populates='client')
+=======
+    breakfast_calories = Column(Integer, nullable=True)
+    lunch_calories = Column(Integer, nullable=True)
+    dinner_calories = Column(Integer, nullable=True)
+    snack_calories = Column(Integer, nullable=True)
+
+    notifications = relationship('Notification', back_populates='client')
+    my_plan = relationship('MyPlan', uselist=False, back_populates='client')
+    weight_records = relationship('ClientWeight', backref='client', lazy=True)
+>>>>>>> Stashed changes
 
     __mapper_args__ = {
         'polymorphic_identity': 'client'
@@ -53,6 +69,15 @@ class Client(User):
         self.desired_weight = desired_weight
         self.desired_date = desired_date
 
+<<<<<<< Updated upstream
+=======
+class ClientWeight(db.Model):
+    id = Column(Integer, primary_key=True)
+    client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
+    recorded_weight = Column(Float(precision=1), nullable=False)
+    weight_date = Column(Date, nullable=False, default=date.today)
+
+>>>>>>> Stashed changes
 class Afflictions(db.Model):
     id = Column(Integer, primary_key = True)
     client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
@@ -138,12 +163,32 @@ class Recipe(db.Model):
     title = Column(String(100), nullable=False)
     recipe_type = Column(String(50), nullable=False)
     description = Column(Text, nullable=False)
+<<<<<<< Updated upstream
     ingredients = db.relationship('RecipeIngredients', backref='recipe', lazy=True)
 
     def __init__(self, title, recipe_type, description):
         self.title = title
         self.recipe_type = recipe_type
         self.description = description
+=======
+    ingredients = relationship('RecipeIngredients', backref='recipe', lazy=True)
+    recipe_picture = Column(String(255), default='static/recipe_pictures/default.jpg')
+
+    total_calories = Column(Integer, nullable=True)
+    total_proteins = Column(Integer, nullable=True)
+    total_carbs = Column(Integer, nullable=True)
+    total_fats = Column(Integer, nullable=True)
+
+    def __init__(self, title, recipe_type, description, total_calories, total_proteins, total_carbs, total_fats):
+        self.title = title
+        self.recipe_type = recipe_type
+        self.description = description
+        self.total_calories = total_calories
+        self.total_proteins = total_proteins
+        self.total_carbs = total_carbs
+        self.total_fats = total_fats
+
+>>>>>>> Stashed changes
 
 class Ingredient(db.Model):
     id = Column(Integer, primary_key=True)
@@ -163,6 +208,7 @@ class Ingredient(db.Model):
         self.fats = fats
 
 class RecipeIngredients(db.Model):
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id'), nullable=False)
@@ -175,3 +221,41 @@ class RecipeIngredients(db.Model):
         self.amount = amount
         self.measurement = measurement
 
+=======
+    recipe_id = Column(Integer, ForeignKey('recipe.id'), primary_key=True)
+    ingredient_id = Column(Integer, ForeignKey('ingredient.id'), primary_key=True)
+    ingredient_name = Column(Text, ForeignKey('ingredient.name'), nullable=False)
+    amount = Column(Integer, nullable=False)
+    measurement = Column(String(50), nullable=False)
+
+    def __init__(self, recipe_id, ingredient_id, ingredient_name, amount, measurement):
+        self.recipe_id = recipe_id
+        self.ingredient_id = ingredient_id
+        self.ingredient_name = ingredient_name
+        self.amount = amount
+        self.measurement = measurement
+
+class RecommendedRecipe(db.Model):
+    id = Column(Integer, primary_key=True)
+    client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
+    recipe_id = Column(Integer, ForeignKey('recipe.id'), nullable=False)
+
+    # Define relationships
+    client = relationship('Client', backref=db.backref('recommended_recipes', lazy=True))
+    recipe = relationship('Recipe', backref=db.backref('recommendations', lazy=True))
+
+    def __init__(self, client_id, recipe_id):
+        self.client_id = client_id
+        self.recipe_id = recipe_id
+
+class MyPlan(db.Model):
+    id = Column(Integer, primary_key=True)
+    client_id = Column(Integer, ForeignKey('client.id'))
+    recipe_id = Column(Integer, ForeignKey('recipe.id'))
+    meal_date = Column(Date)
+    meal_name = Column(String(30))
+
+    client = relationship('Client', back_populates='my_plan')
+    recipe = relationship('Recipe', backref='recipe', lazy=True)
+
+>>>>>>> Stashed changes

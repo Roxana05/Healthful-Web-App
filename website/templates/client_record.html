@@ -25,7 +25,15 @@
         <p class="m-0"><strong>Height:</strong> {{ client.height }} cm</p>
         <p class="m-0"><strong>Weight:</strong> {{ client.weight }} kg</p>
         <p class="m-0"><strong>BMI:</strong> {{ client.bmi }}</p>
+<<<<<<< Updated upstream
         <p class="m-0"><strong>Goal:</strong> {{ client.goal.capitalize() }}</p>
+=======
+        {% if client.goal %}
+        <p class="m-0"><strong>Goal:</strong> {{ client.goal.capitalize() }}</p>
+        {% else %}
+        <p class="m-0"><strong>Goal:</strong> Not set </p>
+        {% endif %}
+>>>>>>> Stashed changes
         <p class="m-0"><strong>Desired weight:</strong> {{ client.desired_weight }} kg</p>
         <p><strong>Goal date:</strong> {{ client.desired_date }}</p>
         <button id="edit-recommendations-btn" class="btn btn-primary mt-2 ml-0">Add Recommendations</button>
@@ -68,6 +76,33 @@
         </div>
       </div>
     </form>
+<<<<<<< Updated upstream
+=======
+
+    <form id="meal-plan-form" method="POST" style="display: none;">
+      <div id="physical-section" class="col-md-4 mt-4">
+        <h5 class="mb-0">Set Meal Plan:</h5><br>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Breakfast calories:</label>
+          <input type="text" name="breakfast-input" id="new-breakfast-input" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Lunch calories:</label>
+          <input type="text" name="lunch-input" id="new-lunch-input" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Dinner calories:</label>
+          <input type="text" name="dinner-input" id="new-dinner-input" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+          <label for="breakfast-input">Set Snack calories:</label>
+          <input type="text" name="snack-input" id="new-snack-input" class="form-control">
+        </div>
+      </div>
+      <button id="meal-plan-btn" class="btn btn-primary" type="submit">Update</button>
+    </form>
+
+>>>>>>> Stashed changes
  </div>
 
  {% include "meal_plan.html" %}
@@ -75,7 +110,11 @@
  <script>
     $(document).ready(function () {
         $("#edit-recommendations-btn").click(function () {
+<<<<<<< Updated upstream
             $("#general-rec-form, #practical-rec-form, #physical-rec-form").toggle();
+=======
+            $("#general-rec-form, #practical-rec-form, #physical-rec-form, #meal-plan-form").toggle();
+>>>>>>> Stashed changes
         });
     });
 

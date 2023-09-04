@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
+<<<<<<< Updated upstream
     <!-- Bootstrap JS and Dependencies -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
@@ -20,6 +21,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     
     
+=======
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/2701ce9264.js" crossorigin="anonymous"></script>
+>>>>>>> Stashed changes
 
     <title>{% block title %}Home{% endblock %}</title>
    
@@ -27,11 +32,12 @@
 <body>
 
      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+         <img src="/static/resources/Logo.png" alt="Your Logo" style="max-height: 3vw; width: auto; margin:1vh;">
       <button
         class="navbar-toggler"
         type="button"
-        data-toggle="collapse"
-        data-target="#navbar">
+        data-bs-toggle="collapse"
+        data-bs-target="#navbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbar">
@@ -60,14 +66,22 @@
             {% if category == 'error' %}
             <div class="alert alert-danger alert-dismissable fade show" role="alert">
                 {{ message }}
+<<<<<<< Updated upstream
                 <button type="button" class="btn-close" data-dismiss="alert" style="float:right;">
+=======
+                <button type="button" class="btn-close" data-bs-dismiss="alert" style="float:right;">
+>>>>>>> Stashed changes
                     <span aria-hidden="true"></span>
                 </button>
             </div>
             {% else %}
             <div class="alert alert-success alert-dismissable fade show" role="alert">
                 {{ message }}
+<<<<<<< Updated upstream
                 <button type="button" class="btn-close" data-dismiss="alert" style="float:right;">
+=======
+                <button type="button" class="btn-close" data-bs-dismiss="alert" style="float:right;">
+>>>>>>> Stashed changes
                     <span aria-hidden="true"></span>
                 </button>
             </div>
@@ -84,7 +98,12 @@
 
     </div>
 
+<<<<<<< Updated upstream
     
     <script src="{{ url_for('static', filename='index.js') }}"></script>
+=======
+     <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+>>>>>>> Stashed changes
 </body>
 </html>
